@@ -2,22 +2,19 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Contact extends Model
 {
-    public function up(){
-        Schema::create('contacts', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('phone')->nullable();
-            $table->unsignedBigInteger('category_id')->nullable();
-            $table->foreign('category_id')
-                ->references('id')
-                ->on('categories')
-                ->onDelete('set null');
-            $table->timestamps();
-        });
+    use HasFactory;
+    
+    // Permite atribuição em massa para os campos abaixo
+    protected $fillable = ['name', 'email', 'phone', 'category_id'];
+
+    // Define o relacionamento: um contato pertence a uma categoria
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
     }
 }
